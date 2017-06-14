@@ -9,7 +9,7 @@ const mdToHtml = md({breaks: true, typographer: true, xhtmlOut: true});
 const limericks = fs.readFileSync('./limericks-20170503.md')
                       .toString('utf-8')
                       .split('\n---\n')
-                      .map(text => ({content: mdToHtml.render(text.trim())}));
+                      .map(text => mdToHtml.render(text.trim()));
 
 console.log(`Read ${limericks.length} limericks.`);
 
