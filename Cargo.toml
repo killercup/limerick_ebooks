@@ -1,0 +1,13 @@
+[package]
+authors = ["Pascal Hertleif <killercup@gmail.com>", "Andre Bogus <bogusandre@gmail.com>"]
+license = "Apache-2.0/MIT"
+name = "limericks"
+publish = false
+repository = "https://github.com/killercup/limericks"
+version = "0.1.0"
+
+[dependencies]
+comrak = "0.1.4"
+error-chain = "0.10.0"
+handlebars = "0.27.0"
+serde_json = "1.0.2"
