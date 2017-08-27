@@ -4,17 +4,195 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{metadata.title}}</title>
-  <link rel="stylesheet" href="style.css"/>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Crimson+Text|Permanent+Marker");
+
+    body {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    @media print {
+      body {
+        font-size: 21px;
+      }
+
+      .page {
+        page-break-after: always;
+      }
+    }
+
+    @media screen {
+      .page {
+        padding-bottom: 4rem;
+        border-bottom: 3px solid #eee;
+        margin-bottom: 4rem;
+      }
+    }
+
+    .title-page {
+      text-align: center;
+      font-size: 2em;
+    }
+
+    .title-page .title {
+      font-family: 'Permanent Marker', sans-serif;
+    }
+
+    .title-page .author {
+
+    }
+
+    @media print {
+      .title-page {
+        padding-top: 50%;
+      }
+    }
+
+    .limerick {
+      font-family: "Crimson Text", serif;
+      font-size: 1.6rem;
+      margin: 2em auto;
+    }
+
+    @media screen {
+      .limerick {
+        width: 50%;
+      }
+    }
+
+    .limerick .index {
+      text-align: center;
+    }
+
+    .limerick .index .number {
+      display: inline-block;
+      width: 4rem;
+      height: 4rem;
+      font-size: 1rem;
+      font-weight: bold;
+      line-height: 4rem;
+      border: 2px solid #999;
+      color: #999;
+      border-radius: 50%;
+      text-align: center;
+    }
+
+    .limerick a {
+      color: inherit;
+      text-decoration: none;
+      word-break: break-word;
+    }
+
+    .limerick .footnotes {
+      font-size: 1rem;
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .limerick .footnote {
+      padding-left: 2rem;
+    }
+
+    .limerick .footnote .number {
+      display: inline-block;
+      width: 2rem;
+      margin-left: -2rem;
+      text-align: center;
+    }
+
+
+    @media print {
+      .page {
+        position: relative;
+        height: 21cm;
+        box-sizing: border-box;
+        padding-top: 2cm;
+      }
+
+      .page .index {
+        margin-bottom: 2cm;
+      }
+
+      .page .footnotes {
+        position: absolute;
+        bottom: 0;
+      }
+    }
+  </style>
 </head>
 <body>
   <header class="page title-page">
-    <h1>{{metadata.title}}</h1>
+    <h1 class="title">{{metadata.title}}</h1>
     <p class="author">{{metadata.author}}</p>
   </header>
-   {{#each limericks as |limerick|}}
-      <article class="page limerick">
-        {{{limerick}}}
-      </article>
-   {{/each}}
+  {{#each limericks as |limerick|}}
+    <article class="page limerick">
+      {{{limerick}}}
+    </article>
+  {{/each}}
+
+  <script>
+    (function turnUpTheLime() {
+        // Easy DOM access
+        const $ = document.querySelectorAll.bind(document);
+        NodeList.prototype.__proto__ = Array.prototype;
+
+        /**
+          * map a function for side-effects only
+          */
+        function tap(fn) {
+          return (item, index, array) => {
+            fn(item, index, array);
+            return item;
+          }
+        }
+
+        function addLimeNumber(limerick, index) {
+          limerick.insertAdjacentHTML('afterbegin',
+            `<div class="index"><span class="number">${index + 1}</span></div>`
+          );
+        }
+
+        function footnote_link(lime_index, link, link_index) {
+          return ` <a href="#note-${lime_index + 1}-${link_index + 1}">
+            <sup>${link_index + 1}</sup>
+          </a>`;
+        }
+
+        function footnote(lime_index, link, link_index) {
+          const link_title = link.getAttribute('title');
+          const link_text = link.getAttribute('href') !== '#'
+            ? `<a href="${link.getAttribute('href')}">(${link.getAttribute('href')})</a>`
+            : null;
+
+          const text = [link_title, link_text].filter(x => !!x).join(`<br/>`);
+
+          return `<li class="footnote" id="note-${lime_index + 1}-${link_index + 1}">
+            <em class="number">${link_index + 1}</em>
+            ${text}
+          </li>`
+        }
+
+        function transformLinks(limerick, lime_index) {
+            const links = limerick.querySelectorAll('a');
+            if (!links.length) { return; }
+
+            const footnotes = links.map(footnote.bind(null, lime_index));
+            limerick.insertAdjacentHTML('beforeend',
+              `<ul class="footnotes">${footnotes.join('')}</ul>`
+            );
+
+            const footnote_links = links.forEach((link, link_index) => {
+              link.insertAdjacentHTML('afterend', footnote_link(lime_index, link, link_index));
+            });
+        }
+
+        $('.limerick')
+          .map(tap(addLimeNumber))
+          .map(tap(transformLinks))
+          ;
+    })();
+  </script>
 </body>
 </html>
