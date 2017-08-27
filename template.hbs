@@ -163,7 +163,7 @@
         function footnote(lime_index, link, link_index) {
           const link_title = link.getAttribute('title');
           const link_text = link.getAttribute('href') !== '#'
-            ? `<a href="${link.getAttribute('href')}">(${link.getAttribute('href')})</a>`
+            ? `<a href="${link.getAttribute('href')}">&lt;${link.getAttribute('href')}&gt;</a>`
             : null;
 
           const text = [link_title, link_text].filter(x => !!x).join(`<br/>`);
