@@ -1,3 +1,8 @@
+---
+title: Rust Limericks
+author: Andre 'lloqig' Bogus
+---
+
 Rust-land is a very strange place
 sans null deref nor data race
 it has its own styles

@@ -8,6 +8,11 @@ version = "0.1.0"
 
 [dependencies]
 comrak = "0.1.4"
-error-chain = "0.10.0"
 handlebars = "0.27.0"
-serde_json = "1.0.2"
+serde_json = "1"
+serde = "1"
+serde_derive = "1"
+serde_yaml = "0.7.1"
+error-chain = "0.11.0-rc.2"
+structopt = "0.1.0"
+structopt-derive = "0.1.0"
